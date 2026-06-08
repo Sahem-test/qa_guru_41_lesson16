@@ -17,7 +17,8 @@ dependencies {
     testImplementation(
             'org.junit.jupiter:junit-jupiter:5.10.1',
             'io.rest-assured:rest-assured:6.0.0',
-            'io.rest-assured:json-schema-validator:6.0.0'
+            'io.rest-assured:json-schema-validator:6.0.0',
+            'net.datafaker:datafaker:2.5.4'
     )
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
