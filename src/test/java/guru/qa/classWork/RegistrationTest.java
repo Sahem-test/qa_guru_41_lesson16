@@ -3,6 +3,7 @@ package guru.qa.classWork;
 import models.pojo.RegistrationBodyPojoModel;
 import models.pojo.RegistrationResponsePojoModel;
 import net.datafaker.Faker;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -13,18 +14,25 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTest {
 
+    String username;
+    String password;
+
+    @BeforeEach
+    public void prepareTestData(){
+        Faker faker = new Faker();
+         username = faker.name().firstName();
+         password = faker.name().firstName();
+    }
+
     @Test
     public void successfulRegistrationTest_badPractice() {
-        Faker faker = new Faker();
-        String userName = faker.name().firstName();
-        String password = faker.name().firstName();
         // url: // https://book-club.qa.guru/api/v1/users/register/
         // body: {
         //  "username": "Sahem",
         //  "password": "552255"
         //}
         // move to model
-        String data = "{\"username\": \"" + userName + "\", " +
+        String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
 
         given()
@@ -37,16 +45,12 @@ public class RegistrationTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("username", is(userName))
+                .body("username", is(username))
                 .body("id", notNullValue());
     }
 
     @Test
     public void successfulRegistrationTest_badPractice_with_pojo() {
-        Faker faker = new Faker();
-        String username = faker.name().firstName();
-        String password = faker.name().firstName();
-
         RegistrationBodyPojoModel data = new RegistrationBodyPojoModel();
         data.setUsername(username);
         data.setPassword(password);
@@ -74,11 +78,7 @@ public class RegistrationTest {
     @Test
     public void unsupportedMediaType415Test() {
 
-        Faker faker = new Faker();
-        String userName = faker.name().fullName();
-        String password = faker.name().firstName();
-
-        String data = "{\"username\": \"" + userName + "\", " +
+        String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
 
         given()
@@ -91,11 +91,7 @@ public class RegistrationTest {
 
     @Test
     public void negativeRegistration500Test() {
-        Faker faker = new Faker();
-        String userName = faker.name().fullName();
-        String password = faker.name().firstName();
-
-        String data = "{\"username\": \"" + userName + "\", " +
+        String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
 
         given()
@@ -109,10 +105,7 @@ public class RegistrationTest {
 
     @Test
     public void invalidUserName400Test() {
-        Faker faker = new Faker();
-        String userName = faker.name().fullName();
-        String password = faker.name().firstName();
-        String data = "{\"username\": \"" + userName + "\", " +
+        String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
 
         given()
@@ -125,17 +118,13 @@ public class RegistrationTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("username", is(userName))
+                .body("username", is(username))
                 .body("id", notNullValue());
     }
 
     @Test
     public void existingUserRegistration400Test() {
-        Faker faker = new Faker();
-        String userName = faker.name().firstName();
-        String password = faker.name().firstName();
-
-        String data = "{\"username\": \"" + userName + "\", " +
+        String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
 
         given()
@@ -148,7 +137,7 @@ public class RegistrationTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("username", is(userName))
+                .body("username", is(username))
                 .body("id", notNullValue());
 
         given()
