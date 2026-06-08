@@ -1,0 +1,41 @@
+plugins {
+    id 'java-library'
+
+
+}
+
+group = 'guru.qa'
+version = '1.0-SNAPSHOT'
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter:5.10.1',
+            'io.rest-assured:rest-assured:6.0.0',
+            'io.rest-assured:json-schema-validator:6.0.0'
+    )
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+
+
+tasks.withType(Test) {
+    useJUnitPlatform()
+    systemProperties(System.getProperties())
+
+    testLogging {
+        lifecycle {
+            events "started", "skipped", "failed", "standard_error", "standard_out"
+            exceptionFormat "short"
+        }
+    }
+}
