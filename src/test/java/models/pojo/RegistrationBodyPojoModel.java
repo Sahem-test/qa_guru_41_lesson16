@@ -5,10 +5,14 @@ public class RegistrationBodyPojoModel {
     String username;
     String password;
 
-//    public  RegistrationBodyPojoModel(String username, String password){
-//        this.username = username;
-//        this.password = password;
-//    }
+
+    public RegistrationBodyPojoModel() {
+    }
+
+    public  RegistrationBodyPojoModel(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
         return username;
