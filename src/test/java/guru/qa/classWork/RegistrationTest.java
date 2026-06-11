@@ -1,9 +1,12 @@
 package guru.qa.classWork;
 
-import models.lombok.RegistrationBodyLombokModel;
-import models.lombok.RegistrationResponseLombokModel;
-import models.pojo.RegistrationBodyPojoModel;
-import models.pojo.RegistrationResponsePojoModel;
+import models.registration.lombok.RegistrationBodyLombokModel;
+import models.registration.lombok.RegistrationResponseLombokModel;
+import models.registration.pojo.RegistrationBodyPojoModel;
+import models.registration.pojo.RegistrationResponsePojoModel;
+import models.registration.records.ExistingUserResponseRecordsModel;
+import models.registration.records.RegistrationBodyRecordsModel;
+import models.registration.records.RegistrationResponseRecordsModel;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,10 +23,10 @@ public class RegistrationTest {
     String password;
 
     @BeforeEach
-    public void prepareTestData(){
+    public void prepareTestData() {
         Faker faker = new Faker();
-         username = faker.name().firstName();
-         password = faker.name().firstName();
+        username = faker.name().firstName();
+        password = faker.name().firstName();
     }
 
     @Test
@@ -47,20 +50,20 @@ public class RegistrationTest {
                 .then()
                 .log().all()
                 .statusCode(201)
-                .body("username", is(username))
+                .body("refresh", is(username))
                 .body("id", notNullValue());
     }
 
 
     @Test
-    public void successfulRegistrationTest_badPractice_with_pojo() {
+    public void successfulRegistrationTest_with_pojo() {
         RegistrationBodyPojoModel data = new RegistrationBodyPojoModel();
         data.setUsername(username);
         data.setPassword(password);
         // Подход с помощью конструктора, применять до 4 значений
-      //  RegistrationBodyPojoModel data = new RegistrationBodyPojoModel(userName,password);
+        //  RegistrationBodyPojoModel data = new RegistrationBodyPojoModel(userName,password);
 
-        RegistrationResponsePojoModel  registrationResponsePojoModel = given()
+        RegistrationResponsePojoModel registrationResponsePojoModel = given()
                 .log().all()
                 .contentType(JSON)
                 // .header("content-type", ContentType.JSON)
@@ -78,14 +81,14 @@ public class RegistrationTest {
     }
 
     @Test
-    public void successfulRegistrationTest_badPractice_with_lombok() {
+    public void successfulRegistrationTest_with_lombok() {
         // Чтобы включить конструктор без параметров, добавить в class анотацию @NoArgsConstructor
         RegistrationBodyLombokModel data = new RegistrationBodyLombokModel();
         data.setUsername(username);
         data.setPassword(password);
         // Подход с помощью конструктора, для включения добавить перед class анотацию @AllArgsConstructor
         //RegistrationBodyLombokModel data = new RegistrationBodyLombokModel(username,password);
-        RegistrationResponseLombokModel  registrationResponseLombokModel = given()
+        RegistrationResponseLombokModel registrationResponseLombokModel = given()
                 .log().all()
                 .contentType(JSON)
                 // .header("content-type", ContentType.JSON)
@@ -99,7 +102,27 @@ public class RegistrationTest {
                 .as(RegistrationResponseLombokModel.class);
 
         assertEquals(username, registrationResponseLombokModel.getUsername());
+    }
 
+    @Test
+    public void successfulRegistrationTest_with_records() {
+
+        RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
+
+        RegistrationResponseRecordsModel registrationResponseRecordModel = given()
+                .log().all()
+                .contentType(JSON)
+                // .header("content-type", ContentType.JSON)
+                .body(data)
+                .when()
+                .post("https://book-club.qa.guru/api/v1/users/register/")
+                .then()
+                .log().all()
+                .statusCode(201)
+                .extract()
+                .as(RegistrationResponseRecordsModel.class);
+
+        assertEquals(username, registrationResponseRecordModel.username());
     }
 
 
@@ -152,8 +175,7 @@ public class RegistrationTest {
 
     @Test
     public void existingUserRegistration400Test() {
-        String data = "{\"username\": \"" + username + "\", " +
-                " \"password\": \"" + password + "\"}";
+        RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
 
         given()
                 .log().all()
@@ -167,7 +189,7 @@ public class RegistrationTest {
                 .statusCode(201)
                 .body("username", is(username))
                 .body("id", notNullValue());
-
+        ExistingUserResponseRecordsModel response =
         given()
                 .log().all()
                 .contentType(JSON)
@@ -178,8 +200,12 @@ public class RegistrationTest {
                 .then()
                 .log().all()
                 .statusCode(400)
-                .body("username[0]", is("A user with that username already exists."));
-
+               // .body("username[0]", is("A user with that username already exists."));
+                .extract()
+                .as(ExistingUserResponseRecordsModel.class);
+        String expectedError = "A user with that username already exists.";
+        assertEquals(expectedError,response.username().get(0));
+       
     }
 
 
