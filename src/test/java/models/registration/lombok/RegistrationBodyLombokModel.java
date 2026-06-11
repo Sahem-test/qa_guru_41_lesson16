@@ -1,8 +1,6 @@
-package models.lombok;
+package models.registration.lombok;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 //@NoArgsConstructor
 //@AllArgsConstructor
