@@ -1,4 +1,4 @@
-package guru.qa.classWork;
+package guru.qa.tests;
 
 import io.restassured.http.ContentType;
 import models.login.LoginBodyModel;
@@ -32,7 +32,8 @@ public class LoginTests extends TestBase {
                 .then()
                 .log().all()
                .statusCode(200)
-                .body(matchesJsonSchemaInClasspath("schemas/successful_login_response_schemas.json"))
+                .body(matchesJsonSchemaInClasspath
+                        ("schemas/login/successful_login_response_schemas.json"))
                 .body("access", notNullValue())
                .body("refresh", notNullValue())
                 .extract().as(SuccessfulLoginResponseModel.class);
@@ -61,7 +62,7 @@ public class LoginTests extends TestBase {
                 .then()
                 .log().all()
                 .statusCode(401)
-                .body(matchesJsonSchemaInClasspath("schemas/wrong_credentials_login_response_schemas.json"))
+                .body(matchesJsonSchemaInClasspath("schemas/login/wrong_credentials_login_response_schemas.json"))
                 .body("detail", notNullValue())
                 .extract().as(WrongCredentialsLoginResponseModel.class);
 
