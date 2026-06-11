@@ -1,7 +1,6 @@
-package guru.qa.classWork;
+package guru.qa.tests;
 
 import io.restassured.RestAssured;
-import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
 
 public class TestBase {

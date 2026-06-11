@@ -1,4 +1,4 @@
-package models.registration.records;
+package models.registration.model_examples.records;
 
 import static java.lang.String.format;
 

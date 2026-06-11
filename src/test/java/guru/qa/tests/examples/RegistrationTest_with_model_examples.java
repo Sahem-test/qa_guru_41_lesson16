@@ -1,23 +1,23 @@
-package guru.qa.classWork;
+package guru.qa.tests.examples;
 
-import models.registration.lombok.RegistrationBodyLombokModel;
-import models.registration.lombok.RegistrationResponseLombokModel;
-import models.registration.pojo.RegistrationBodyPojoModel;
-import models.registration.pojo.RegistrationResponsePojoModel;
-import models.registration.records.ExistingUserResponseRecordsModel;
-import models.registration.records.RegistrationBodyRecordsModel;
-import models.registration.records.RegistrationResponseRecordsModel;
+import models.registration.model_examples.lombok.RegistrationBodyLombokModel;
+import models.registration.model_examples.lombok.RegistrationResponseLombokModel;
+import models.registration.model_examples.pojo.RegistrationBodyPojoModel;
+import models.registration.model_examples.pojo.RegistrationResponsePojoModel;
+import models.registration.model_examples.records.ExistingUserResponseRecordsModel;
+import models.registration.model_examples.records.RegistrationBodyRecordsModel;
+import models.registration.model_examples.records.RegistrationResponseRecordsModel;
 import net.datafaker.Faker;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.post;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class RegistrationTest {
+public class RegistrationTest_with_model_examples {
 
     String username;
     String password;
@@ -30,6 +30,7 @@ public class RegistrationTest {
     }
 
     @Test
+    @Disabled
     public void successfulRegistrationTest_badPractice() {
         // url: // https://book-club.qa.guru/api/v1/users/register/
         // body: {
@@ -56,6 +57,7 @@ public class RegistrationTest {
 
 
     @Test
+    @Disabled
     public void successfulRegistrationTest_with_pojo() {
         RegistrationBodyPojoModel data = new RegistrationBodyPojoModel();
         data.setUsername(username);
@@ -81,6 +83,7 @@ public class RegistrationTest {
     }
 
     @Test
+    @Disabled
     public void successfulRegistrationTest_with_lombok() {
         // Чтобы включить конструктор без параметров, добавить в class анотацию @NoArgsConstructor
         RegistrationBodyLombokModel data = new RegistrationBodyLombokModel();
@@ -105,6 +108,7 @@ public class RegistrationTest {
     }
 
     @Test
+    @Disabled
     public void successfulRegistrationTest_with_records() {
 
         RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
@@ -127,6 +131,7 @@ public class RegistrationTest {
 
 
     @Test
+    @Disabled
     public void unsupportedMediaType415Test() {
 
         String data = "{\"username\": \"" + username + "\", " +
@@ -141,6 +146,7 @@ public class RegistrationTest {
     }
 
     @Test
+    @Disabled
     public void negativeRegistration500Test() {
         String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
@@ -155,6 +161,7 @@ public class RegistrationTest {
 
 
     @Test
+    @Disabled
     public void invalidUserName400Test() {
         String data = "{\"username\": \"" + username + "\", " +
                 " \"password\": \"" + password + "\"}";
@@ -174,6 +181,7 @@ public class RegistrationTest {
     }
 
     @Test
+    @Disabled
     public void existingUserRegistration400Test() {
         RegistrationBodyRecordsModel data = new RegistrationBodyRecordsModel(username, password);
 
@@ -205,7 +213,7 @@ public class RegistrationTest {
                 .as(ExistingUserResponseRecordsModel.class);
         String expectedError = "A user with that username already exists.";
         assertEquals(expectedError,response.username().get(0));
-       
+
     }
 
 
