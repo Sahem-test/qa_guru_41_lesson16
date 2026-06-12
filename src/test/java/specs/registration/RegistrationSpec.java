@@ -1,5 +1,6 @@
 package specs.registration;
 
+import io.restassured.builder.ResponseBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
@@ -11,6 +12,7 @@ import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInC
 import static org.hamcrest.Matchers.notNullValue;
 
 public class RegistrationSpec {
+
     public static RequestSpecification registrationRequestSpec = with()
             .log().all()
             .contentType(JSON)
@@ -34,4 +36,28 @@ public class RegistrationSpec {
             .expectBody("username", notNullValue())
             .build();
 
+    public static  RequestSpecification unsupportedMediaTypeRegistrationRequestSpec = with()
+            .log().all()
+            .basePath("/api/v1");
+
+    public static  ResponseSpecification unsupportedMediaTypeRegistrationResponseSpec = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(415)
+            .expectBody(matchesJsonSchemaInClasspath
+                    ("schemas/registration/unsupported_mediatype_registration_response_schemas.json"))
+            .build();
+
+    public static  ResponseSpecification wrongUsernameResponseSpecification = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(400)
+            .expectBody(matchesJsonSchemaInClasspath
+                    ("schemas/registration/wrong_username_registration_response_schemas.json"))
+            .build();
+
+    public static  ResponseSpecification wrongPasswordResponseSpecification = new ResponseSpecBuilder()
+            .log(ALL)
+            .expectStatusCode(400)
+            .expectBody(matchesJsonSchemaInClasspath
+                    ("schemas/registration/wrong_password_registration_response_schemas.json"))
+            .build();
 }
