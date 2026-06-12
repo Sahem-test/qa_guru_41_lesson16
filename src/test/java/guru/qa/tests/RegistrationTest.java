@@ -12,6 +12,7 @@ import static io.restassured.http.ContentType.JSON;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static specs.registration.RegistrationSpec.*;
 
 
 public class RegistrationTest extends TestBase{
@@ -33,34 +34,26 @@ public class RegistrationTest extends TestBase{
 
         RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
 
-        SuccessfulRegistrationResponseModel registrationResponseRecordModel = given()
-                .log().all()
-                .contentType(JSON)
+        SuccessfulRegistrationResponseModel registrationResponseModel = given(registrationRequestSpec)
                 .body(registrationData)
-                .basePath("/api/v1")
                 .when()
                 .post("/users/register/")
                 .then()
-                .log().all()
-                .statusCode(201)
-                .body(matchesJsonSchemaInClasspath
-                        ("schemas/registration/successful_registration_response_schemas.json"))
-                .body("username", notNullValue())
-                .body("remoteAddr", notNullValue())
+                .spec(successfulRegistrationResponseSpec)
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class);
 
-        String actualUsername = registrationResponseRecordModel.username();
+        String actualUsername = registrationResponseModel.username();
 
         assertThat(actualUsername).isEqualTo(username);
-        assertThat(registrationResponseRecordModel.firstName()).isEmpty();
-        assertThat(registrationResponseRecordModel.id()).isGreaterThan(0);
-        assertThat(registrationResponseRecordModel.lastName()).isEmpty();
-        assertThat(registrationResponseRecordModel.email()).isEmpty();
+        assertThat(registrationResponseModel.firstName()).isEmpty();
+        assertThat(registrationResponseModel.id()).isGreaterThan(0);
+        assertThat(registrationResponseModel.lastName()).isEmpty();
+        assertThat(registrationResponseModel.email()).isEmpty();
 
         String ipAddressRegexp = "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$";
 
-        assertThat(registrationResponseRecordModel.remoteAddr()).matches(ipAddressRegexp);
+        assertThat(registrationResponseModel.remoteAddr()).matches(ipAddressRegexp);
     }
 
 
@@ -68,20 +61,12 @@ public class RegistrationTest extends TestBase{
     public void wrongExistingUserRegistrationTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(username, password);
         SuccessfulRegistrationResponseModel firstRegistrationResponse =
-                given()
-                        .log().all()
-                        .contentType(JSON)
+                given(registrationRequestSpec)
                         .body(registrationData)
-                        .basePath("/api/v1")
                         .when()
                         .post("/users/register/")
                         .then()
-                        .log().all()
-                        .statusCode(201)
-                        .body(matchesJsonSchemaInClasspath
-                                ("schemas/registration/successful_registration_response_schemas.json"))
-                        .body("username", notNullValue())
-                        .body("id", notNullValue())
+                        .spec(successfulRegistrationResponseSpec)
                         .extract()
                         .as(SuccessfulRegistrationResponseModel.class);
 
@@ -89,19 +74,12 @@ public class RegistrationTest extends TestBase{
         assertThat(actualUsername).isEqualTo(username);
 
         ExistingUserResponseModel secondRegistrationResponse =
-                given()
-                        .log().all()
-                        .contentType(JSON)
+                given(registrationRequestSpec)
                         .body(registrationData)
-                        .basePath("/api/v1")
                         .when()
                         .post("/users/register/")
                         .then()
-                        .log().all()
-                        .statusCode(400)
-                        .body(matchesJsonSchemaInClasspath
-                                ("schemas/registration/existing_user_registration_response_schemas.json"))
-                        .body("username", notNullValue())
+                        .spec(wrongExistingUserRegistrationResponseSpec)
                         .extract()
                         .as(ExistingUserResponseModel.class);
 

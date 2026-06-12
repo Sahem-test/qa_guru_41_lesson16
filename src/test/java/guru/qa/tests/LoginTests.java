@@ -17,10 +17,10 @@ public class LoginTests extends TestBase {
 
     @Test
     public void successfulLoginTest(){
-        LoginBodyModel data = new LoginBodyModel(username,password);
+        LoginBodyModel loginData = new LoginBodyModel(username,password);
 
         SuccessfulLoginResponseModel loginResponse = given(loginRequestSpec)
-                .body(data)
+                .body(loginData)
                 .when()
                 .post("/auth/token/")
                 .then()
