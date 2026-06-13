@@ -47,16 +47,16 @@ public class LoginTests extends TestBase {
     }
 
     @Test
-    public void wrongCredentialsLoginTest() {
+    public void invalidCredentialsLoginTest() {
         LoginBodyModel data = new LoginBodyModel(td.username, td.wrongPassword);
 
-        WrongCredentialsLoginResponseModel loginResponse = given(loginRequestSpec)
+        InvalidCredentialsLoginResponseModel loginResponse = given(loginRequestSpec)
                 .body(data)
                 .when()
                 .post("/auth/token/")
                 .then()
                 .spec(invalidCredentialsLoginResponseSpec)
-                .extract().as(WrongCredentialsLoginResponseModel.class);
+                .extract().as(InvalidCredentialsLoginResponseModel.class);
 
         String actualErrorInvalidUsernameOrPassword = loginResponse.detail();
         assertThat(actualErrorInvalidUsernameOrPassword).isEqualTo(td.expectedErrorInvalidUsernameOrPassword);

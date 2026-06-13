@@ -89,7 +89,7 @@ public class LogoutTests extends TestBase {
                         .when()
                         .post("/auth/logout/")
                         .then()
-                        .spec(wrongRefreshTokenLogoutResponseSpec)
+                        .spec(invalidTokenLogoutResponseSpec)
                         .extract().as(WrongReusedRefreshTokenResponseModel.class);
 
         String actualDetailReusedRefreshToken = logoutResponse.detail();
@@ -143,7 +143,7 @@ public class LogoutTests extends TestBase {
                 .when()
                 .post("/auth/logout/")
                 .then()
-                .spec(wrongRefreshTokenLogoutResponseSpec)
+                .spec(invalidTokenLogoutResponseSpec)
                 .extract().as(WrongReusedRefreshTokenResponseModel.class);
 
         String actualDetailReusedRefreshToken = logoutResponse.detail();

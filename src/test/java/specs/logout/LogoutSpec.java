@@ -26,7 +26,7 @@ public class LogoutSpec {
             .expectBody(equalTo("{}"))
             .build();
 
-    public static ResponseSpecification wrongRefreshTokenLogoutResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification invalidTokenLogoutResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(401)
             .expectBody(matchesJsonSchemaInClasspath
