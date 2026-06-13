@@ -30,7 +30,7 @@ public class LogoutSpec {
             .log(ALL)
             .expectStatusCode(401)
             .expectBody(matchesJsonSchemaInClasspath
-                    ("schemas/logout/wrong_reused_refreshToken_logout_response_schemas.json"))
+                    ("schemas/logout/reused_refresh_token_logout_response_schema.json"))
             .expectBody("detail", notNullValue())
             .expectBody("code", notNullValue())
             .build();

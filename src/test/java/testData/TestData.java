@@ -17,7 +17,7 @@ public class TestData {
 
     ipAddressRegexp = "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
             expectedErrorInvalidUsernameOrPassword = "Invalid username or password.",
-            expectedErrorAuthorized = "Authentication credentials were not provided.",
+            expectedUnauthorizedError = "Authentication credentials were not provided.",
             expectedErrorExistingUser = "A user with that username already exists.",
             expectedErrorUnsupportedMediaType = "Unsupported media type \"text/plain; charset=ISO-8859-1\" in request.",
             expectedErrorNotBeBlank = "This field may not be blank.",
@@ -27,6 +27,6 @@ public class TestData {
             expectedErrorValidToken = "Token is invalid",
             expectedErrorWrongTokenType = "Token has wrong type",
             expectedErrorTokenIsBlackListed = "Token is blacklisted",
-            expectedErrorTokenNotValid = "token_not_valid";
+            expectedTokenNotValidCode = "token_not_valid";
 
 }

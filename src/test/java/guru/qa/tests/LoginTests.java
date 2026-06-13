@@ -55,7 +55,7 @@ public class LoginTests extends TestBase {
                 .when()
                 .post("/auth/token/")
                 .then()
-                .spec(wrongCredentialsRefreshResponseSpec)
+                .spec(invalidCredentialsLoginResponseSpec)
                 .extract().as(WrongCredentialsLoginResponseModel.class);
 
         String actualErrorInvalidUsernameOrPassword = loginResponse.detail();
@@ -71,7 +71,7 @@ public class LoginTests extends TestBase {
                 .when()
                 .post("/auth/token/refresh/")
                 .then()
-                .spec(WithoutRefreshTokenResponseSpec)
+                .spec(withoutRefreshTokenResponseSpec)
                 .extract().as(WithoutRefreshTokenLoginResponseModel.class);
 
         String actualRefresh = emptyRefreshResponseModel.refresh().get(0);
@@ -93,7 +93,7 @@ public class LoginTests extends TestBase {
         String actualCodeInvalidRefreshToken = loginResponse.code();
 
         assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedErrorValidToken);
-        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
+        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedTokenNotValidCode);
     }
 
     @Test
@@ -133,7 +133,7 @@ public class LoginTests extends TestBase {
         String actualCodeInvalidRefreshToken = loginResponse.code();
 
         assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedErrorWrongTokenType);
-        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
+        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedTokenNotValidCode);
 
     }
 

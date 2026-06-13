@@ -54,7 +54,7 @@ public class LogoutTests extends TestBase {
     }
 
     @Test
-    public void ReusedRefreshTokenAfterLogoutNegativeTest() {
+    public void logoutWithReusedRefreshTokenShouldReturn401Test() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.password);
         given(registrationRequestSpec)
                 .body(registrationData)
@@ -95,7 +95,7 @@ public class LogoutTests extends TestBase {
         String actualDetailReusedRefreshToken = logoutResponse.detail();
         String actualCodeReusedRefreshToken = logoutResponse.code();
         assertThat(actualDetailReusedRefreshToken).isEqualTo(td.expectedErrorTokenIsBlackListed);
-        assertThat(actualCodeReusedRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
+        assertThat(actualCodeReusedRefreshToken).isEqualTo(td.expectedTokenNotValidCode);
 
     }
         @Test
@@ -149,7 +149,7 @@ public class LogoutTests extends TestBase {
         String actualDetailReusedRefreshToken = logoutResponse.detail();
         String actualCodeReusedRefreshToken = logoutResponse.code();
         assertThat(actualDetailReusedRefreshToken).isEqualTo(td.expectedErrorWrongTokenType);
-        assertThat(actualCodeReusedRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
+        assertThat(actualCodeReusedRefreshToken).isEqualTo(td.expectedTokenNotValidCode);
 
     }
 

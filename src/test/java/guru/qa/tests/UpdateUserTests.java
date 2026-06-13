@@ -40,7 +40,7 @@ public class UpdateUserTests extends TestBase {
 
         String accessToken = responseLogin.access();
 
-        SuccessfulUpdateUserBodyModel dataUpdateUser = new SuccessfulUpdateUserBodyModel(td.username, td.firstName,
+        UpdateUserBodyModel dataUpdateUser = new UpdateUserBodyModel(td.username, td.firstName,
                 td.lastName, td.email);
         SuccessfulUpdateUserResponseModel responseUpdateUser =
                 given(updateUserRequestSpec)
@@ -86,7 +86,7 @@ public class UpdateUserTests extends TestBase {
 
         String accessToken = responseLogin.access();
 
-        SuccessfulUpdateUserBodyModel dataUpdateUser = new SuccessfulUpdateUserBodyModel(td.username, td.firstName,
+        UpdateUserBodyModel dataUpdateUser = new UpdateUserBodyModel(td.username, td.firstName,
                 td.lastName, td.email);
         SuccessfulUpdateUserResponseModel responseUpdateUser =
                 given(updateUserRequestSpec)
@@ -186,7 +186,7 @@ public class UpdateUserTests extends TestBase {
                         .when()
                         .put("/users/me/")
                         .then()
-                        .spec(wrongPartialUpdateUseResponseSpec)
+                        .spec(unsuccessfulPartialUpdateUserResponseSpec)
                         .extract().as(UnsuccessfulPartialUpdateUserResponseModel.class);
 
         String actualFirstName = responseUpdateUser.firstName().get(0);
@@ -201,7 +201,7 @@ public class UpdateUserTests extends TestBase {
     @Test
     public void withoutRequiredAuthorizationHeaderUpdateUserNegativeTest() {
 
-        SuccessfulUpdateUserBodyModel dataUpdateUser = new SuccessfulUpdateUserBodyModel(td.username, td.firstName,
+        UpdateUserBodyModel dataUpdateUser = new UpdateUserBodyModel(td.username, td.firstName,
                 td.lastName, td.email);
         UnauthorizedResponseModel responseUpdateUser =
                 given(updateUserRequestSpec)
@@ -213,7 +213,7 @@ public class UpdateUserTests extends TestBase {
                         .extract().as(UnauthorizedResponseModel.class);
 
         String actualDetail = responseUpdateUser.detail();
-        assertThat(actualDetail).isEqualTo(td.expectedErrorAuthorized);
+        assertThat(actualDetail).isEqualTo(td.expectedUnauthorizedError);
     }
 }
 

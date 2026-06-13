@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static specs.registration.RegistrationSpec.*;
 
 
-public class RegistrationTest extends TestBase {
+public class RegistrationTests extends TestBase {
     TestData td = new TestData();
 
     @Test

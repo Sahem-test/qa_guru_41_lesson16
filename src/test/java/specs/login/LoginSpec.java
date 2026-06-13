@@ -26,7 +26,7 @@ public class LoginSpec {
             .expectBody("refresh", notNullValue())
             .build();
 
-    public static ResponseSpecification wrongCredentialsRefreshResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification invalidCredentialsLoginResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(401)
             .expectBody(matchesJsonSchemaInClasspath
@@ -34,7 +34,7 @@ public class LoginSpec {
             .expectBody("detail", notNullValue())
             .build();
 
-    public static ResponseSpecification WithoutRefreshTokenResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification withoutRefreshTokenResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(400)
             .expectBody(matchesJsonSchemaInClasspath

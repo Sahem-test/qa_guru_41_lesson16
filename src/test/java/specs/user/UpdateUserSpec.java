@@ -20,7 +20,7 @@ public class UpdateUserSpec {
             .log(ALL)
             .expectStatusCode(200)
             .expectBody(matchesJsonSchemaInClasspath
-                    ("schemas/user/successful_updateUser_response_schemas.json"))
+                    ("schemas/user/successful_update_user_response_schema.json"))
             .expectBody("id", notNullValue())
             .expectBody("username", notNullValue())
             .expectBody("firstName", notNullValue())
@@ -29,7 +29,7 @@ public class UpdateUserSpec {
             .expectBody("remoteAddr", notNullValue())
             .build();
 
-    public static ResponseSpecification wrongPartialUpdateUseResponseSpec = new ResponseSpecBuilder()
+    public static ResponseSpecification unsuccessfulPartialUpdateUserResponseSpec = new ResponseSpecBuilder()
             .log(ALL)
             .expectStatusCode(400)
             .expectBody(matchesJsonSchemaInClasspath
