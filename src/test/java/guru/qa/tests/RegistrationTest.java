@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Test;
 import testData.TestData;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
-import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static specs.registration.RegistrationSpec.*;
 
@@ -17,7 +15,7 @@ public class RegistrationTest extends TestBase {
     @Test
     public void successfulRegistrationTest() {
 
-        RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username,td.password);
+        RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.password);
 
         SuccessfulRegistrationResponseModel registrationResponseModel = given(registrationRequestSpec)
                 .body(registrationData)
@@ -100,7 +98,7 @@ public class RegistrationTest extends TestBase {
                 .then()
                 .spec(wrongUsernameResponseSpecification)
                 //.log().all()
-               // .statusCode(400)
+                // .statusCode(400)
 //                .body(matchesJsonSchemaInClasspath
 //                        ("schemas/registration/wrong_username_registration_response_schemas.json"))
                 .extract()

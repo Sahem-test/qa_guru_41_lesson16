@@ -1,13 +1,13 @@
 package guru.qa.tests;
 
 import io.restassured.http.ContentType;
-import models.login.LoginBodyModel;
+import models.login.RefreshBodyModel;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static java.lang.String.format;
-import static specs.login.LoginSpec.loginRequestSpec;
-import static specs.login.LoginSpec.successfulLoginResponseSpec;
+import static specs.login.LoginSpec.refreshRequestSpec;
+import static specs.login.LoginSpec.successfulRefreshResponseSpec;
 
 public class LogoutTests extends TestBase {
 
@@ -16,14 +16,14 @@ public class LogoutTests extends TestBase {
 
     @Test
     public void successfulLogoutTest() {
-        LoginBodyModel data = new LoginBodyModel(username, password);
+        RefreshBodyModel data = new RefreshBodyModel(username, password);
 
-        String refreshToken = given(loginRequestSpec)
+        String refreshToken = given(refreshRequestSpec)
                 .body(data)
                 .when()
                 .post("/auth/token/")
                 .then()
-                .spec(successfulLoginResponseSpec)
+                .spec(successfulRefreshResponseSpec)
                 .extract().path("refresh");
 
 
