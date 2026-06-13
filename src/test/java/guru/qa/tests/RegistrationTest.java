@@ -37,7 +37,7 @@ public class RegistrationTest extends TestBase {
     }
 
     @Test
-    public void wrongExistingUserRegistrationTest() {
+    public void existingUserRegistrationNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.password);
         SuccessfulRegistrationResponseModel firstRegistrationResponse =
                 given(registrationRequestSpec)
@@ -63,11 +63,11 @@ public class RegistrationTest extends TestBase {
                         .as(ExistingUserResponseModel.class);
 
         String actualError = secondRegistrationResponse.username().get(0);
-        assertThat(actualError).isEqualTo(td.existingUserExpectedError);
+        assertThat(actualError).isEqualTo(td.expectedErrorExistingUser);
     }
 
     @Test
-    public void unsupportedMediaTypeTest() {
+    public void unsupportedMediaTypeRegistrationNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.password);
 
         UnsupportedMediaTypeRegistrationBodyModel unsupportedMediaTypeResponseModel =
@@ -81,79 +81,58 @@ public class RegistrationTest extends TestBase {
                         .as(UnsupportedMediaTypeRegistrationBodyModel.class);
 
         String actualError = unsupportedMediaTypeResponseModel.detail();
-        assertThat(actualError).isEqualTo(td.unsupportedMediaTypeExpectedError);
+        assertThat(actualError).isEqualTo(td.expectedErrorUnsupportedMediaType);
     }
 
     @Test
-    public void emptyFieldUsernameWrongRegistrationTest() {
+    public void emptyUsernameRegistrationNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel("", td.password);
 
         EmptyFieldUsernameResponseModel emptyFieldUsernameResponseModel = given(registrationRequestSpec)
-//                .log().all()
-//                .contentType(JSON)
-//                .basePath("/api/v1")
                 .body(registrationData)
                 .when()
                 .post("/users/register/")
                 .then()
                 .spec(wrongUsernameResponseSpecification)
-                //.log().all()
-                // .statusCode(400)
-//                .body(matchesJsonSchemaInClasspath
-//                        ("schemas/registration/wrong_username_registration_response_schemas.json"))
                 .extract()
                 .as(EmptyFieldUsernameResponseModel.class);
 
         String actualError = emptyFieldUsernameResponseModel.username().get(0);
-        assertThat(actualError).isEqualTo(td.emptyFieldUsernameExpectedError);
+        assertThat(actualError).isEqualTo(td.expectedErrorNotBeBlank);
     }
 
     @Test
-    public void emptyFieldPasswordWrongRegistrationTest() {
+    public void emptyPasswordRegistrationNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, "");
 
         WrongPasswordResponseModel wrongPasswordResponseModel = given(registrationRequestSpec)
-//                .log().all()
-//                .contentType(JSON)
-//                .basePath("/api/v1")
                 .body(registrationData)
                 .when()
                 .post("/users/register/")
                 .then()
                 .spec(wrongPasswordResponseSpecification)
-//                .log().all()
-//                .statusCode(400)
-//                .body(matchesJsonSchemaInClasspath
-//                        ("schemas/registration/wrong_password_registration_response_schemas.json"))
                 .extract()
                 .as(WrongPasswordResponseModel.class);
 
         String actualError = wrongPasswordResponseModel.password().get(0);
-        assertThat(actualError).isEqualTo(td.emptyFieldPasswordExpectedError);
+        assertThat(actualError).isEqualTo(td.expectedErrorNotBeBlank);
     }
 
     @Test
-    public void longerRequiredLengthWrongRegistrationTest() {
+    public void passwordLongerRequiredLengthRegistrationNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.longerRequiredLengthPassword);
 
         WrongPasswordResponseModel wrongPasswordResponseModel = given(registrationRequestSpec)
-//                .log().all()
-//                .contentType(JSON)
-//                .basePath("/api/v1")
                 .body(registrationData)
                 .when()
                 .post("/users/register/")
                 .then()
                 .spec(wrongPasswordResponseSpecification)
-//                .log().all()
-//                .statusCode(400)
-//                .body(matchesJsonSchemaInClasspath
-//                        ("schemas/registration/wrong_password_registration_response_schemas.json"))
                 .extract()
                 .as(WrongPasswordResponseModel.class);
 
         String actualError = wrongPasswordResponseModel.password().get(0);
-        assertThat(actualError).isEqualTo(td.longerRequiredLengthPasswordExpectedError);
+        assertThat(actualError).isEqualTo(td.expectedErrorLongerRequiredLengthPassword);
 
     }
 }

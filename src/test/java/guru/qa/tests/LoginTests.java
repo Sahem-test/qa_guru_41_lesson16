@@ -11,36 +11,35 @@ import static specs.login.LoginSpec.*;
 import static specs.registration.RegistrationSpec.registrationRequestSpec;
 import static specs.registration.RegistrationSpec.successfulRegistrationResponseSpec;
 
-public class RefreshTests extends TestBase {
+public class LoginTests extends TestBase {
 
     TestData td = new TestData();
 
     @Test
-    public void successfulRefreshTest() {
+    public void successfulLoginTest() {
 
         RegistrationBodyModel registrationData =
                 new RegistrationBodyModel(td.username, td.password);
 
         given(registrationRequestSpec)
-
                 .body(registrationData)
                 .when()
                 .post("/users/register/")
                 .then()
                 .spec(successfulRegistrationResponseSpec);
-        RefreshBodyModel data = new RefreshBodyModel(td.username, td.password);
 
-        SuccessfulRefreshResponseModel refreshResponse = given(refreshRequestSpec)
+        LoginBodyModel data = new LoginBodyModel(td.username, td.password);
+        SuccessfulLoginResponseModel loginResponse = given(loginRequestSpec)
                 .body(data)
                 .when()
                 .post("/auth/token/")
                 .then()
-                .spec(successfulRefreshResponseSpec)
-                .extract().as(SuccessfulRefreshResponseModel.class);
+                .spec(successfulLoginResponseSpec)
+                .extract().as(SuccessfulLoginResponseModel.class);
 
         String expectedTokenPart = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-        String actualAccess = refreshResponse.access();
-        String actualRefresh = refreshResponse.refresh();
+        String actualAccess = loginResponse.access();
+        String actualRefresh = loginResponse.refresh();
 
         assertThat(actualAccess).startsWith(expectedTokenPart);
         assertThat(actualRefresh).startsWith(expectedTokenPart);
@@ -49,42 +48,40 @@ public class RefreshTests extends TestBase {
 
     @Test
     public void wrongCredentialsLoginTest() {
-        RefreshBodyModel data = new RefreshBodyModel(td.username, td.wrongPassword);
+        LoginBodyModel data = new LoginBodyModel(td.username, td.wrongPassword);
 
-        WrongCredentialsRefreshResponseModel loginResponse = given(refreshRequestSpec)
+        WrongCredentialsLoginResponseModel loginResponse = given(loginRequestSpec)
                 .body(data)
                 .when()
                 .post("/auth/token/")
                 .then()
                 .spec(wrongCredentialsRefreshResponseSpec)
-                .extract().as(WrongCredentialsRefreshResponseModel.class);
+                .extract().as(WrongCredentialsLoginResponseModel.class);
 
-        String expectedDetailError = "Invalid username or password.";
-        String actualDetailError = loginResponse.detail();
-
-        assertThat(expectedDetailError).isEqualTo(actualDetailError);
+        String actualErrorInvalidUsernameOrPassword = loginResponse.detail();
+        assertThat(actualErrorInvalidUsernameOrPassword).isEqualTo(td.expectedErrorInvalidUsernameOrPassword);
 
     }
 
     @Test
-    public void emptyFieldRefreshTest() {
-        EmptyRefreshTokenBodyModel emptyRefreshToken = new EmptyRefreshTokenBodyModel();
-        EmptyRefreshResponseModel emptyRefreshResponseModel = given(refreshRequestSpec)
+    public void emptyRefreshTokenLoginNegativeTest() {
+        WithoutRefreshTokenLoginBodyModel emptyRefreshToken = new WithoutRefreshTokenLoginBodyModel();
+        WithoutRefreshTokenLoginResponseModel emptyRefreshResponseModel = given(loginRequestSpec)
                 .body(emptyRefreshToken)
                 .when()
                 .post("/auth/token/refresh/")
                 .then()
-                .spec(emptyFieldRefreshResponseSpec)
-                .extract().as(EmptyRefreshResponseModel.class);
+                .spec(WithoutRefreshTokenResponseSpec)
+                .extract().as(WithoutRefreshTokenLoginResponseModel.class);
 
         String actualRefresh = emptyRefreshResponseModel.refresh().get(0);
-        assertThat(actualRefresh).isEqualTo(td.expectedRefreshWithEmptyField);
+        assertThat(actualRefresh).isEqualTo(td.expectedRequiredField);
     }
 
     @Test
-    public void invalidRefreshTokenTest() {
-        InvalidRefreshTokenBodyModel invalidTokenBodyModel = new InvalidRefreshTokenBodyModel(td.invalidRefreshToken);
-        InvalidRefreshTokenResponseModel loginResponse = given(refreshRequestSpec)
+    public void invalidRefreshTokenLoginNegativeTest() {
+        InvalidRefreshTokenBodyModel invalidTokenBodyModel = new InvalidRefreshTokenBodyModel(td.expectedErrorInvalidRefreshToken);
+        InvalidRefreshTokenResponseModel loginResponse = given(loginRequestSpec)
                 .body(invalidTokenBodyModel)
                 .when()
                 .post("/auth/token/refresh/")
@@ -95,12 +92,12 @@ public class RefreshTests extends TestBase {
         String actualDetailInvalidRefreshToken = loginResponse.detail();
         String actualCodeInvalidRefreshToken = loginResponse.code();
 
-        assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedDetailInvalidRefreshToken);
-        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedCodeInvalidRefreshToken);
+        assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedErrorValidToken);
+        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
     }
 
     @Test
-    public void accessTokenInsteadRefreshTokenTest() {
+    public void accessTokenInsteadRefreshTokenLoginNegativeTest() {
         RegistrationBodyModel registrationData =
                 new RegistrationBodyModel(td.username, td.password);
 
@@ -112,19 +109,19 @@ public class RefreshTests extends TestBase {
                 .then()
                 .spec(successfulRegistrationResponseSpec);
 
-        RefreshBodyModel data = new RefreshBodyModel(td.username, td.password);
+        LoginBodyModel data = new LoginBodyModel(td.username, td.password);
 
-        SuccessfulRefreshResponseModel refreshResponse = given(refreshRequestSpec)
+        SuccessfulLoginResponseModel refreshResponse = given(loginRequestSpec)
                 .body(data)
                 .when()
                 .post("/auth/token/")
                 .then()
-                .spec(successfulRefreshResponseSpec)
-                .extract().as(SuccessfulRefreshResponseModel.class);
+                .spec(successfulLoginResponseSpec)
+                .extract().as(SuccessfulLoginResponseModel.class);
         String accessToken = refreshResponse.access();
 
         InvalidRefreshTokenBodyModel invalidTokenBodyModel = new InvalidRefreshTokenBodyModel(accessToken);
-        InvalidRefreshTokenResponseModel loginResponse = given(refreshRequestSpec)
+        InvalidRefreshTokenResponseModel loginResponse = given(loginRequestSpec)
                 .body(invalidTokenBodyModel)
                 .when()
                 .post("/auth/token/refresh/")
@@ -135,8 +132,8 @@ public class RefreshTests extends TestBase {
         String actualDetailInvalidRefreshToken = loginResponse.detail();
         String actualCodeInvalidRefreshToken = loginResponse.code();
 
-        assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedDetailWrongTokenType);
-        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedCodeInvalidRefreshToken);
+        assertThat(actualDetailInvalidRefreshToken).isEqualTo(td.expectedErrorWrongTokenType);
+        assertThat(actualCodeInvalidRefreshToken).isEqualTo(td.expectedErrorTokenNotValid);
 
     }
 
