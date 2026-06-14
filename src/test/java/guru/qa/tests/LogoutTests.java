@@ -98,25 +98,27 @@ public class LogoutTests extends TestBase {
         assertThat(actualCodeReusedRefreshToken).isEqualTo(td.expectedTokenNotValidCode);
 
     }
-        @Test
-    public void logoutWithoutRefreshTokenNegativeTest(){
 
-            WithoutRefreshTokenLogoutBodyModel logoutData = new WithoutRefreshTokenLogoutBodyModel();
-            WithoutRefreshTokenLogoutResponseModel logoutResponse =
-            given(logoutRequestSpec)
-                    .body(logoutData)
-                    .when()
-                    .post("/auth/logout/")
-                    .then()
-                    .spec(withoutRefreshTokenLogoutResponseSpec)
-                    .extract().as(WithoutRefreshTokenLogoutResponseModel.class);
-
-
-            String actualErrorWithoutRefreshToken = logoutResponse.refresh().get(0);
-            assertThat(actualErrorWithoutRefreshToken).isEqualTo(td.expectedRequiredField);
-    }
     @Test
-    public void accessTokenInsteadOfRefreshTokenNegativeTest(){
+    public void logoutWithoutRefreshTokenNegativeTest() {
+
+        WithoutRefreshTokenLogoutBodyModel logoutData = new WithoutRefreshTokenLogoutBodyModel();
+        WithoutRefreshTokenLogoutResponseModel logoutResponse =
+                given(logoutRequestSpec)
+                        .body(logoutData)
+                        .when()
+                        .post("/auth/logout/")
+                        .then()
+                        .spec(withoutRefreshTokenLogoutResponseSpec)
+                        .extract().as(WithoutRefreshTokenLogoutResponseModel.class);
+
+
+        String actualErrorWithoutRefreshToken = logoutResponse.refresh().get(0);
+        assertThat(actualErrorWithoutRefreshToken).isEqualTo(td.expectedRequiredField);
+    }
+
+    @Test
+    public void accessTokenInsteadOfRefreshTokenNegativeTest() {
         RegistrationBodyModel registrationData = new RegistrationBodyModel(td.username, td.password);
         given(registrationRequestSpec)
                 .body(registrationData)
@@ -138,13 +140,13 @@ public class LogoutTests extends TestBase {
 
         LogoutBodyModel logoutData = new LogoutBodyModel(accessToken);
         WrongReusedRefreshTokenResponseModel logoutResponse =
-        given(logoutRequestSpec)
-                .body(logoutData)
-                .when()
-                .post("/auth/logout/")
-                .then()
-                .spec(invalidTokenLogoutResponseSpec)
-                .extract().as(WrongReusedRefreshTokenResponseModel.class);
+                given(logoutRequestSpec)
+                        .body(logoutData)
+                        .when()
+                        .post("/auth/logout/")
+                        .then()
+                        .spec(invalidTokenLogoutResponseSpec)
+                        .extract().as(WrongReusedRefreshTokenResponseModel.class);
 
         String actualDetailReusedRefreshToken = logoutResponse.detail();
         String actualCodeReusedRefreshToken = logoutResponse.code();

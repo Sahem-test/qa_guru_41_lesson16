@@ -14,8 +14,7 @@ public class TestData {
             password = faker.regexify("[A-Za-z0-9]{8}"),
             wrongPassword = faker.name().fullName(),
             longerRequiredLengthPassword = "a".repeat(129),
-
-    ipAddressRegexp = "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
+            ipAddressRegexp = "^((25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.){3}(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)$",
             expectedErrorInvalidUsernameOrPassword = "Invalid username or password.",
             expectedUnauthorizedError = "Authentication credentials were not provided.",
             expectedErrorExistingUser = "A user with that username already exists.",
